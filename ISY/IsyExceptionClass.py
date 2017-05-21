@@ -1,4 +1,4 @@
-from urllib2 import URLError
+from urllib.error import URLError
 
 __author__ = 'Peter Shipley <peter.shipley@gmail.com>'
 __copyright__ = "Copyright (C) 2015 Peter Shipley"
@@ -11,8 +11,7 @@ __all__ = [ 'IsyError', 'IsyNodeError',
         'IsyCommunicationError',
         'IsyRuntimeWarning', 'IsyWarning'
         ]
-
-from urllib2 import URLError, HTTPError
+from urllib.error import URLError, HTTPError
 
 #
 # The Following was lifted from other modules used as examples
@@ -144,6 +143,6 @@ class IsyRuntimeWarning(IsyWarning, RuntimeWarning):
 #
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
     print("syntax ok")
     exit(0)

@@ -44,7 +44,7 @@ def load_prog(self, progid=None):
 
     for pg in prog_tree.iter("program"):
         pdict = dict()
-        for k, v in pg.items():
+        for k, v in list(pg.items()):
             pdict[k] = v
         for pe in list(pg):
             pdict[pe.tag] = pe.text
@@ -71,8 +71,8 @@ def load_prog(self, progid=None):
 #               self._name2id[n] = ("program", pdict["id"])
 
             if n in self.name2prog:
-                print("Dup name : \"" + n + "\" ", pdict["id"])
-                print("name2prog ", self.name2prog[n])
+                print(("Dup name : \"" + n + "\" ", pdict["id"]))
+                print(("name2prog ", self.name2prog[n]))
             else:
                 self.name2prog[n] = pdict["id"]
 
@@ -92,7 +92,7 @@ def get_prog(self, pname):
 
     """
     if self.debug & 0x01:
-        print("get_prog :" + pname)
+        print(("get_prog :" + pname))
     if not self._progdict:
         self.load_prog()
 
@@ -109,7 +109,7 @@ def get_prog(self, pname):
         return self.progCdict[progid]
     else:
         if self.debug & 0x01:
-            print("Isy get_prog no prog : \"%s\"" % progid)
+            print(("Isy get_prog no prog : \"%s\"" % progid))
         raise LookupError("no prog : " + str(progid) )
 
 def _prog_get_id(self, pname):
@@ -118,7 +118,7 @@ def _prog_get_id(self, pname):
     """
     if isinstance(pname, IsyProgram):
          return pname["id"]
-    if isinstance(pname, (int, long)):
+    if isinstance(pname, int):
         p = "{0:04X}".format(pname)
     else:
         p = str(pname).strip()
@@ -159,7 +159,7 @@ def prog_addrs(self):
     """
     if not self._progdict:
         self.load_prog()
-    return self._progdict.viewkeys()
+    return self._progdict.keys()
 
 def prog_get_src(self, pname):
 
@@ -234,7 +234,7 @@ def _prog_comm(self, prog_id, cmd):
     xurl = "/rest/programs/" + prog_id + "/" + cmd
 
     if self.debug & 0x02:
-        print("xurl = " + xurl)
+        print(("xurl = " + xurl))
 
     resp = self._getXMLetree(xurl)
     #self._printXML(resp)
@@ -315,7 +315,7 @@ def _prog_rename(self, progid=None, progname=None):
 #
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
 
     print("syntax ok")
     exit(0)

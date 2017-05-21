@@ -32,7 +32,7 @@ import socket
 import struct
 import sys
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import uuid
 
 import ISY
@@ -84,7 +84,7 @@ DEBUG = True
 def dbg(msg):
     global DEBUG
     if DEBUG:
-        print msg
+        print(msg)
         sys.stdout.flush()
 
 
@@ -120,7 +120,7 @@ class poller:
         else:
             ready = []
             if len(self.targets) > 0:
-                (rlist, wlist, xlist) = select.select(self.targets.keys(), [], [], timeout)
+                (rlist, wlist, xlist) = select.select(list(self.targets.keys()), [], [], timeout)
                 ready = [(x, None) for x in rlist]
         for one_ready in ready:
             target = self.targets.get(one_ready[0], None)
@@ -332,17 +332,17 @@ class upnp_broadcast_responder(object):
 
             try:
                 self.ssock.bind(('', self.port))
-            except Exception, e:
+            except Exception as e:
                 dbg("WARNING: Failed to bind %s:%d: %s", (self.ip, self.port, e))
                 ok = False
 
             try:
                 self.ssock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, self.mreq)
-            except Exception, e:
+            except Exception as e:
                 dbg('WARNING: Failed to join multicast group:', e)
                 ok = False
 
-        except Exception, e:
+        except Exception as e:
             dbg("Failed to initialize UPnP sockets:", e)
             return False
         if ok:
@@ -375,7 +375,7 @@ class upnp_broadcast_responder(object):
                 return self.ssock.recvfrom(size)
             else:
                 return False, False
-        except Exception, e:
+        except Exception as e:
             dbg("recvfrom")
             dbg(e)
             return False, False
@@ -401,7 +401,7 @@ def load_fauxmos(myisy=None, fport=None):
     try:
         js = myisy.soapcomm("GetSysConf", name="/WEB/CONF/fauxmo.jsn")
         # print "r=",r
-    except Exception, e:
+    except Exception as e:
         return(None)
         pass
     else:
@@ -425,7 +425,7 @@ def load_fauxmos(myisy=None, fport=None):
             for k in sorted(isydevs.keys()):
                 try:
                     nod = myisy[k]
-                except Exception, e:
+                except Exception as e:
                     pass
                 else:
                     l = [ k, nod ]
@@ -451,7 +451,7 @@ def load_fauxmos(myisy=None, fport=None):
             for k in sorted(isyprog.keys()):
                 try:
                     prg = myisy.get_prog(k)
-                except Exception, e:
+                except Exception as e:
                     pass
                 else:
                     l = [ k, prg ]
@@ -497,7 +497,7 @@ def main(myisy):
 
     bfm = load_fauxmos(myisy)
     if bfm is None:
-        print "building device list from ISY"
+        print("building device list from ISY")
         bfm = build_fauxmos(myisy, base_port)
 
     # Set up our singleton for polling the sockets for data ready
@@ -514,7 +514,7 @@ def main(myisy):
     if DEBUG > 2:
         import pprint
         #
-        print "\nbfm :",
+        print("\nbfm :", end=' ')
         pprint.pprint(bfm)
 
     # Create our FauxMo virtual switch devices
@@ -532,7 +532,7 @@ def main(myisy):
             # Allow time for a ctrl-c to stop the process
             p.poll(100)
             time.sleep(0.1)
-        except Exception, e:
+        except Exception as e:
             dbg(e)
             break
 

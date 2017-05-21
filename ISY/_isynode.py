@@ -148,12 +148,12 @@ def _gen_folder_list(self, nodeinfo, reload=0):
             continue
 
 
-        for k, v in fold.items():
+        for k, v in list(fold.items()):
             fprop[fold.tag + "-" + k] = v
         for child in list(fold):
             fprop[child.tag] = child.text
             if child.attrib:
-                for k, v in child.items():
+                for k, v in list(child.items()):
                     fprop[child.tag + "-" + k] = v
         # self._nodefolder[fprop["address"]] = fprop
         n = fprop["name"].upper()
@@ -161,8 +161,8 @@ def _gen_folder_list(self, nodeinfo, reload=0):
 
         # name2id to replace folder2addr as a global lookup table
         if n in self._name2id:
-            print("Dup name2id (Folder) : \"" + n + "\" ", fprop["address"])
-            print("\t_name2id ", self._name2id[n])
+            print(("Dup name2id (Folder) : \"" + n + "\" ", fprop["address"]))
+            print(("\t_name2id ", self._name2id[n]))
         else:
             self._name2id[n] = ("folder", fprop["address"])
 
@@ -186,12 +186,12 @@ def _gen_nodegroups(self, nodeinfo, reload=0):
             continue
 
 
-        for k, v in grp.items():
+        for k, v in list(grp.items()):
             gprop[grp.tag + "-" + k] = v
         for child in list(grp):
             if child.tag == "parent":
                 gprop[child.tag] = child.text
-                for k, v in child.items():
+                for k, v in list(child.items()):
                     gprop[child.tag + "-" + k] = v
             elif child.tag == "members":
                 glist = dict()
@@ -201,7 +201,7 @@ def _gen_nodegroups(self, nodeinfo, reload=0):
             else:
                 gprop[child.tag] = child.text
                 if child.attrib:
-                    for k, v in child.items():
+                    for k, v in list(child.items()):
                         gprop[child.tag + "-" + k] = v
 
         if "address" in gprop:
@@ -244,21 +244,21 @@ def _gen_nodedict(self, nodeinfo, reload=0):
             continue
 
 
-        for k, v in inode.items():
+        for k, v in list(inode.items()):
             idict[inode.tag + "-" + k] = v
         for child in list(inode):
             # self._printinfo(child, "\tchild")
 
             if child.tag == "parent":
                 idict[child.tag] = child.text
-                for k, v in child.items():
+                for k, v in list(child.items()):
                     idict[child.tag + "-" + k] = v
             # special case where ST, OL, and RR
             elif child.tag == "property":
                 if child.tag not in idict:
                     idict[child.tag] = dict()
                 nprop = dict()
-                for k, v in child.items():
+                for k, v in list(child.items()):
                     # print("child.items", k, v)
                     nprop[k] = v
                 if "id" in nprop:
@@ -326,7 +326,7 @@ def node_addrs(self):
     """
     if not self._nodedict:
         self.load_nodes()
-    return self._nodedict.viewkeys()
+    return self._nodedict.keys()
 
 def scene_addrs(self):
     """ access method for scene addresses
@@ -334,7 +334,7 @@ def scene_addrs(self):
     """
     if not self._nodegroups:
         self.load_nodes()
-    return self._nodegroups.viewkeys()
+    return self._nodegroups.keys()
 
 def node_get_path(self, nodeid):
     " get path of parent names "
@@ -571,7 +571,7 @@ def _node_send(self, naddr, action, prop, *args):
     #print("_node_send : node=%s prop=%s val=%s" % str(naddr), prop, val)
     # print ("_node_send : node=" + str(naddr) + " prop=" + prop + " val=" + val )
     xurl = "/rest/nodes/{!s:}/{!s:}/{!s:}/{!s:}".format(naddr, action, prop, "/".join(str(x) for x in args) )
-    if self.debug & 0x02 : print("xurl = " + xurl)
+    if self.debug & 0x02 : print(("xurl = " + xurl))
     resp = self._getXMLetree(xurl)
     # self._printXML(resp)
     if resp is None or resp.attrib["succeeded"] != 'true':
@@ -610,7 +610,7 @@ def node_comm(self, naddr, cmd, *args):
     calls /rest/nodes/<node-id>/cmd/<cmd>>/<cmd value>
     """
     if self.debug & 0x04:
-        print("node_comm", naddr, cmd)
+        print(("node_comm", naddr, cmd))
     (nodetype, node_id) = self._node_get_id(naddr)
     cmd_id = self._get_control_id(cmd)
 
@@ -619,7 +619,7 @@ def node_comm(self, naddr, cmd, *args):
 
     if not node_id:
         raise LookupError("node_comm: unknown node : {!s}".format(naddr) )
-    print("naddr : ", naddr, " : ", node_id)
+    print(("naddr : ", naddr, " : ", node_id))
 
     if not cmd_id:
         raise TypeError("node_comm: unknown command : {!s}".format(cmd) )
@@ -689,7 +689,7 @@ def load_node_types(self):
             self._nodeCategory[ncat.attrib["id"]][subcat.attrib["id"]] = subcat.attrib["name"]
             #self._printinfo(subcat, "subcat :")
     if self.debug & 0x100:
-        print("nodeCategory : ", self._nodeCategory)
+        print(("nodeCategory : ", self._nodeCategory))
         self._printdict(self._nodeCategory)
 
 def node_get_type(self, typid):
@@ -798,7 +798,7 @@ def _updatenode(self, naddr):
 
         for prop in _nodestat.iter('property'):
             tprop = dict()
-            for k, v in prop.items():
+            for k, v in list(prop.items()):
                 tprop[k] = v
             if "id" in tprop:
                 self._nodedict[naddr]["property"][tprop["id"]].update(tprop)
@@ -816,7 +816,7 @@ def node_get_notes(self, naddr):
             IsyPropertyError :  if property invalid
     """
     if self.debug & 0x04:
-        print("node_get_notes", naddr)
+        print(("node_get_notes", naddr))
 
     (nodetype, node_id) = self._node_get_id(naddr)
     if not node_id:
@@ -825,7 +825,7 @@ def node_get_notes(self, naddr):
     ret_prop = dict()
 
     xurl = "/rest/nodes/{!s:}/notes".format(node_id)
-    if self.debug & 0x02 : print("xurl = " + xurl)
+    if self.debug & 0x02 : print(("xurl = " + xurl))
     resp = self._getXMLetree(xurl)
 
     if resp is not None:
@@ -852,7 +852,7 @@ def node_enable(self, naddr, enable=True):
     calls /rest/nodes/<node-id>/disable
     """
     if self.debug & 0x04:
-        print("node_enable", naddr, enable)
+        print(("node_enable", naddr, enable))
     (nodetype, node_id) = self._node_get_id(naddr)
 
     if not node_id:
@@ -865,7 +865,7 @@ def node_enable(self, naddr, enable=True):
         op = "disable"
 
     xurl = "/rest/nodes/{!s:}/{!s:}".format(naddr, op)
-    if self.debug & 0x02 : print("xurl = " + xurl)
+    if self.debug & 0x02 : print(("xurl = " + xurl))
     resp = self._getXMLetree(xurl)
     # self._printXML(resp)
     if resp is None or resp.attrib["succeeded"] != 'true':
@@ -881,7 +881,7 @@ def node_set_powerinfo(self, naddr, deviceClass=None, wattage=None, dcPeriod=Non
 
     """
     if self.debug & 0x04:
-        print("node_power_info", naddr, deviceClass, wattage, dcPeriod)
+        print(("node_power_info", naddr, deviceClass, wattage, dcPeriod))
 
     (nodetype, node_id) = self._node_get_id(naddr)
 
@@ -918,7 +918,7 @@ def node_del(self, naddr):
     (nodetype, node_id) = self._node_get_id(naddr)
 
     if self.debug & 0x04:
-        print("node_del", naddr)
+        print(("node_del", naddr))
 
     if not node_id:
         raise LookupError(
@@ -927,7 +927,7 @@ def node_del(self, naddr):
 
     try:
         r = self._node_remove(node_id)
-    except IsySoapError, se:
+    except IsySoapError as se:
 
         # if error code is 501 then Node did not exist or was already deleted
         # this is messy and needs to change or be removed
@@ -947,7 +947,7 @@ def _node_remove(self, node_id):
         Calls soap RemoveNode
     """
     if self.debug & 0x04:
-        print("_node_remove", node_id)
+        print(("_node_remove", node_id))
     return self.soapcomm("RemoveNode", node=node_id)
 
 
@@ -1003,7 +1003,7 @@ def node_restore(self, naddr, flag=0):
 #
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
 
     print("syntax ok")
     exit(0)

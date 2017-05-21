@@ -146,7 +146,7 @@ class _IsyNodeBase(IsySubClass):
         if 'members' in self._mydict:
             # print("mydict['members'] : ", type(self._mydict['members']) )
             if type(self._mydict['members']) == 'dict':
-                return self._mydict['members'].keys()
+                return list(self._mydict['members'].keys())
             # if type(self._mydict['members']) == 'list':
             return self._mydict['members'][:]
         return [ ]
@@ -188,7 +188,7 @@ class _IsyNodeBase(IsySubClass):
 
     def _rename(self, cmd, newname):
         if self.debug & 0x01:
-            print("rename : ", self.__class__.__name__, " : ", newname)
+            print(("rename : ", self.__class__.__name__, " : ", newname))
         #if not isinstance(newname, str) or len(newname) == 0:
         #    print "newname : ", newname
         #    raise IsyTypeError("rename : name value not str")
@@ -312,8 +312,8 @@ class IsyNode(_IsyNodeBase):
         self._hash = hashlib.sha256(self._mydict["address"])
 
         if self.debug & 0x01:
-            print("Init Node : \"" + self._mydict["address"] + \
-                "\" : \"" + self._mydict["name"] + "\"")
+            print(("Init Node : \"" + self._mydict["address"] + \
+                "\" : \"" + self._mydict["name"] + "\""))
             # self.isy._printdict(self.__dict__)
 
 
@@ -382,7 +382,7 @@ class IsyNode(_IsyNodeBase):
         """  generic property set """
         # print "IN set_prop ", prop, new_value
         if self.debug & 0x04:
-            print("_set_prop ", prop, " : ", new_value)
+            print(("_set_prop ", prop, " : ", new_value))
 
         if prop in self._propalias:
             prop = self._propalias[prop]
@@ -595,7 +595,7 @@ class IsyScene(_IsyNodeBase):
     def _getmembers(self):
         """ List members of a scene or group """
         if "members" in self._mydict:
-            return self._mydict["members"].keys()
+            return list(self._mydict["members"].keys())
         else:
             return None
     members = property(_getmembers)
@@ -736,6 +736,6 @@ class IsyNodeFolder(_IsyNodeBase):
 #
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
     print("syntax ok")
     exit(0)

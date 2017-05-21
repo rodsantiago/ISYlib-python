@@ -67,8 +67,8 @@ def isy_discover(**kwargs):
     ddata.count = kwargs.get("count", 2)
 
     if ddata.debug:
-        print("isy_discover :debug=%s\ttimeout=%s\tpassive=%s\tcount=%s\n" % \
-            (ddata.debug, ddata.timeout, ddata.passive, ddata.count))
+        print(("isy_discover :debug=%s\ttimeout=%s\tpassive=%s\tcount=%s\n" % \
+            (ddata.debug, ddata.timeout, ddata.passive, ddata.count)))
 
     def isy_discover_timeout(signum, frame):
         print("isy_discover_timeout CALL")
@@ -83,8 +83,8 @@ def isy_discover(**kwargs):
         if ddata.debug:
             print("isy_upnp CalL")
 
-            print("isy_upnp debug=%s\ttimeout=%s\tpassive=%s\tcount=%s\n" % \
-                    (ddata.debug, ddata.timeout, ddata.passive, ddata.count))
+            print(("isy_upnp debug=%s\ttimeout=%s\tpassive=%s\tcount=%s\n" % \
+                    (ddata.debug, ddata.timeout, ddata.passive, ddata.count)))
 
         multicast_group = '239.255.255.250'
         multicast_port = 1900
@@ -120,9 +120,9 @@ def isy_discover(**kwargs):
                 data = str( data, encoding='utf8')
 
             if ddata.debug:
-                print('received %s bytes from %s' % (len(data), address))
+                print(('received %s bytes from %s' % (len(data), address)))
                 print(data)
-                print("ddata.upnp_urls = ", ddata.upnp_urls)
+                print(("ddata.upnp_urls = ", ddata.upnp_urls))
 
             # only ISY devices
             # if should I look for
@@ -163,7 +163,7 @@ def isy_discover(**kwargs):
         signal.alarm(0)
         signal.signal(signal.SIGALRM, old_handler)
         if ddata.debug:
-            print("return data.upnp_urls = ", ddata.upnp_urls)
+            print(("return data.upnp_urls = ", ddata.upnp_urls))
 
     result = {}
 #    result_tags = ["UDN", "URLBase", "SCPDURL",
@@ -235,7 +235,7 @@ def isy_discover(**kwargs):
 
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
     print("syntax ok")
 
 #    res = isy_discover(count=1, timeout=10, passive=0)

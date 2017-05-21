@@ -80,8 +80,8 @@ def load_vars(self):
 
             # name2id to replace name2var as a global lookup table
             if n in self._name2id:
-                print("Dup name2id : \"" + n + "\" : " + vid)
-                print("\tname2id ", self._name2id[n])
+                print(("Dup name2id : \"" + n + "\" : " + vid))
+                print(("\tname2id ", self._name2id[n]))
             else:
                 self._name2id[n] = ("var", vid)
 
@@ -117,7 +117,7 @@ def load_vars(self):
 
 def var_refresh_value(self, var):
     if self.debug & 0x04:
-        print("var_refresh_value : ", var)
+        print(("var_refresh_value : ", var))
 
     if var is None:
         self.load_vars()
@@ -131,7 +131,7 @@ def var_refresh_value(self, var):
     a = varid.split(':')
     xurl = "/rest/vars/get/" + a[0] + "/" + a[1]
     resp = self._getXMLetree(xurl)
-    print "resp", resp
+    print("resp", resp)
 
     if resp is None:
         raise IsyPropertyError("var_refresh: error geting var : " + str(var))
@@ -165,7 +165,7 @@ def var_set_value(self, var, val, prop="val"):
         max values are a signed 32bit int ( -214748364 to 2147483647 )
     """
     if self.debug & 0x04:
-        print("var_set_value ", val, " : ", prop)
+        print(("var_set_value ", val, " : ", prop))
 
     varid = self._var_get_id(var)
 
@@ -187,13 +187,13 @@ def var_set_value(self, var, val, prop="val"):
 def _var_set_value(self, varid, val, prop="val"):
     """ Set var value by name or ID """
     if self.debug & 0x04:
-        print("_var_set_value ", str(val), " : ", prop)
+        print(("_var_set_value ", str(val), " : ", prop))
     a = varid.split(':')
     if prop == "init":
         xurl = "/rest/vars/init/" + a[0] + "/" + a[1] + "/" + str(val)
     else:
         xurl = "/rest/vars/set/" + a[0] + "/" + a[1] + "/" + str(val)
-    if self.debug & 0x02 : print("xurl = " + xurl)
+    if self.debug & 0x02 : print(("xurl = " + xurl))
     resp = self._getXMLetree(xurl)
 
     # pprint.pprint(resp)
@@ -251,7 +251,7 @@ def var_names(self):
     if not self._vardict:
         self.load_vars()
 
-    return self.name2var.viewkeys()
+    return self.name2var.keys()
 
 
 def get_var(self, vname):
@@ -266,7 +266,7 @@ def get_var(self, vname):
 
     """
     if self.debug & 0x01:
-        print("get_var :" + vname)
+        print(("get_var :" + vname))
 
     varid = self._var_get_id(vname)
     # print("\tvarid : " + varid)
@@ -281,7 +281,7 @@ def get_var(self, vname):
         return self.varCdict[varid]
     else:
         if self.debug & 0x01:
-            print("Isy get_var no var : \"%s\"" % varid)
+            print(("Isy get_var no var : \"%s\"" % varid))
         raise IsyLookupError("no var : " + vname + " : " + str(varid))
 
 
@@ -338,7 +338,7 @@ def var_iter(self, vartype=0):
     if not self._vardict:
         self.load_vars()
 
-    k = self._vardict.keys()
+    k = list(self._vardict.keys())
     for v in k:
         if vartype:
             vartype = str(vartype)
@@ -422,14 +422,14 @@ def var_add(self, varname=None, varid=None, vartype="int", value=None, initval=N
 
     new_var_data = ET.tostring(var_et, method='html')
     if self.debug & 0x01:
-        print "new_var_data=", new_var_data
+        print("new_var_data=", new_var_data)
 
     # This is stupid but method='html' lowercases closing tags
     # regardless of the opening tag case.
     new_var_data = new_var_data.replace("</clist>", "</CList>")
 
     if self.debug & 0x01:
-        print "new_var_data=", new_var_data
+        print("new_var_data=", new_var_data)
 
     r = self._sendfile(data=new_var_data, filename=varpath, load="y")
 
@@ -647,7 +647,7 @@ def _var_rename(self, vartype=None, varid=None, varname=None):
 #
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
 
     print("syntax ok")
     exit(0)

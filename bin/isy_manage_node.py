@@ -66,7 +66,7 @@ def doit(isy):
     argv = isy.unknown_args[:]
 
     if len(argv) == 0:
-        print "Entering interactive mode"
+        print("Entering interactive mode")
         import shlex
         interactive = True
 
@@ -74,8 +74,8 @@ def doit(isy):
         try:
 
             if interactive is True:
-                print "isylib> ",
-                argv = shlex.split(raw_input())
+                print("isylib> ", end=' ')
+                argv = shlex.split(input())
                 if argv is None or len(argv) == 0:
                     continue
 
@@ -84,10 +84,10 @@ def doit(isy):
             interactive = False
             break
         except cmdException as e:
-            print e
+            print(e)
         except ISY.IsyError as e:
-            print "IsyError :"
-            print "\t", e
+            print("IsyError :")
+            print("\t", e)
         finally:
             if interactive is not True:
                 break
@@ -129,7 +129,7 @@ def run_comm(isy, argv):
     elif cmd in ["MD", "NEWFOLDER", "MKDIR"]:
         if ( len(argv) > 0 and argv[0] != "?" ):
             foldername = argv.pop(0)
-            print "newfolder {!s}".format(foldername)
+            print("newfolder {!s}".format(foldername))
         else:
             raise cmdException("Syntax :\n\t{!s} <foldername>".format(cmd))
 
@@ -158,7 +158,7 @@ def run_comm(isy, argv):
                 raise cmdException("Syntax :\n\t{!s} [level]".format(cmd))
             else:
                 verbose = int(argv[0])
-        print "verbose = ", verbose
+        print("verbose = ", verbose)
 
     elif cmd in ["REBOOT"]:
         do_reboot(isy)
@@ -183,7 +183,7 @@ def run_comm(isy, argv):
             raise cmdException("+\t{!s} <node_id>".format(cmd))
 
     else:
-        print "Unknown command : ", cmd # str(" ").join(argv)
+        print("Unknown command : ", cmd) # str(" ").join(argv)
 
 #
 # TODO deal with  MV node Folder
@@ -195,7 +195,7 @@ def do_rename_nodes(isy, cmd, argv):
     if ( len(argv) > 1  and argv[0] != "?" ):
         old = argv.pop(0)
         new = argv.pop(0)
-        print cmd, old, new
+        print(cmd, old, new)
         isy.rename(old, new)
     else:
         raise cmdException("Syntax :\n\t{!s} <node_id> <new_name>".format(cmd))
@@ -205,7 +205,7 @@ def do_test(isy, cmd, argv):
     if len(argv) == 1:
         raise cmdException("Missing Arg:\n\t{!s} <node_id> <new_name>".format(cmd))
     else:
-        print "TEST ", str(", ").join(argv)
+        print("TEST ", str(", ").join(argv))
 
 
 def link_nodes(isy, cmd, argv):
@@ -232,18 +232,18 @@ def do_interactive_link(isy):
         isy.load_nodes()
         old_node_set = set(isy.node_addrs())
 
-        print "Entering Linking Mode"
+        print("Entering Linking Mode")
         isy.node_discover()
-        raw_input("Press Enter to continue...")
+        input("Press Enter to continue...")
 
         isy.node_discover_cancel()
 
-        print "Exited Linking Mode"
+        print("Exited Linking Mode")
         isy.load_nodes(reload=1)
         updated_node_set = set(isy.node_addrs() )
 
         new_node_set = updated_node_set - old_node_set
-        print "New Nodes : ",  str(", ").join(new_node_set)
+        print("New Nodes : ",  str(", ").join(new_node_set))
 
         exit(0)
 def do_del_node(isy, cmd, argv):
@@ -253,7 +253,7 @@ def do_del_node(isy, cmd, argv):
     if ( len(argv) == 0 or argv[0] == '?' or len(argv) > 1):
         raise cmdException("Syntax :\n\t{!s} <node_id>".format(cmd))
     nodeid = argv.pop(0)
-    print "isy.node_del(nodeid)"
+    print("isy.node_del(nodeid)")
 
 
 def do_restore(isy, cmd, argv):
@@ -263,9 +263,9 @@ def do_restore(isy, cmd, argv):
     if ( len(argv) > 0 and argv[0] != "?" ):
         nodeid = argv.pop(0)
         if nodeid.upper() == "ALL":
-            print "isy.node_restore_all(nodeid)"
+            print("isy.node_restore_all(nodeid)")
         else :
-            print "isy.node_restore(nodeid)"
+            print("isy.node_restore(nodeid)")
     else:
         raise cmdException("Syntax :\n\t{!s} <node_id>\n\tto restore all nodes, use 'ALL' as node_id\n".format(cmd))
 
@@ -291,7 +291,7 @@ def do_node(isy, cmd, argv):
     }
 
     if ( len(argv) == 0 or ( len(argv) > 0 and argv[0] == "?") ):
-        cmdlist = ", ".join( node_cmd.keys() )
+        cmdlist = ", ".join( list(node_cmd.keys()) )
         raise cmdException("Syntax :\n\t{!s} <command> [node_id]\n\tAvalible commands :\n\t\t{!s}\n".format(cmd, cmdlist))
 
     subcmd = argv.pop(0).upper()
@@ -326,12 +326,12 @@ def do_nodes(isy, cmd, argv):
 
 def do_node_on(isy, cmd, argv):
     nodeid = argv.pop(0)
-    print "TURN", nodeid, "ON"
+    print("TURN", nodeid, "ON")
     isy.node_comm( nodeid, "ON")
 
 def do_node_off(isy, cmd, argv):
     nodeid = argv.pop(0)
-    print "TURN", nodeid, "OFF"
+    print("TURN", nodeid, "OFF")
     isy.node_comm( nodeid, "OFF")
 
 def do_prog(isy, cmd, argv):
@@ -370,7 +370,7 @@ def do_scene_add(isy, cmd, argv):
         create new scene/group glue
     """
     if ( len(argv) == 0 or argv[0] == "?" or len(argv) < 3 ):
-        print "1"
+        print("1")
         op = "ERR"
     else:
         op = "ADD"
@@ -397,10 +397,10 @@ def do_scene_add(isy, cmd, argv):
 
     if op in [ "ADD" ]:
         # isy.scene_add_node( sceneid, nodeid, nflag)
-        print "isy.scene_add_node", sceneid, nodeid, nflag
+        print("isy.scene_add_node", sceneid, nodeid, nflag)
     if op in [  "DELETE", "DEL", "RM" ]:
         # isy.scene_del_node( sceneid, nodeid)
-        print "isy.scene_del_node", sceneid, nodeid
+        print("isy.scene_del_node", sceneid, nodeid)
     else:
         raise cmdException("Syntax :\n\t{!s} [ADD|DEL] <scene_id> <node_id> [controller|responder]\n".format(cmd))
 
@@ -426,16 +426,16 @@ def do_list_node(isy, cmd, argv, nodetype=None):
     if len(argv) > 0:
         nodeid = argv.pop(0)
         node = isy.get_node(nodeid)
-        print node.name, node.address, node.formatted, node.enabled, node.ramprate
+        print(node.name, node.address, node.formatted, node.enabled, node.ramprate)
     else:
-        print(pfmt.format("Node Name", "Address", "Status", "Enabled", "Path"))
-        print(pfmt.format("---------", "-------", "------", "------", "----"))
+        print((pfmt.format("Node Name", "Address", "Status", "Enabled", "Path")))
+        print((pfmt.format("---------", "-------", "------", "------", "----")))
         for nod in isy.node_iter(nodetype=nodetype):
             if nod.objtype == "scene":
-                print(pfmt.format(nod.name, nod.address, "-", "-", "-"))
+                print((pfmt.format(nod.name, nod.address, "-", "-", "-")))
             else:
-                print(pfmt.format(nod.name, nod.address,
-                        nod.formatted, nod.enabled, nod.path))
+                print((pfmt.format(nod.name, nod.address,
+                        nod.formatted, nod.enabled, nod.path)))
 
 
 def do_debuglevel(isy):
@@ -447,10 +447,10 @@ def do_reboot(isy):
     # isy.reboot(isy)
 
 def print_cmds(cmd_list=commands_help):
-    for k, v in cmd_list.items():
-        print "    {!s:<22} :\t{!s}".format(k, v)
-    print "\nFor more detail on command run command with arg '?'"
-    print "\n* == may not be implemented\n"
+    for k, v in list(cmd_list.items()):
+        print("    {!s:<22} :\t{!s}".format(k, v))
+    print("\nFor more detail on command run command with arg '?'")
+    print("\n* == may not be implemented\n")
 
 
 if __name__ == '__main__':

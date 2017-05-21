@@ -17,14 +17,14 @@ from ISY.IsyExceptionClass import IsyResponseError, IsyValueError
 ##
 def _load_networking(self, resource_id):
     if self.debug & 0x01:
-        print("_load_networking {!s} called".format(resource_id))
+        print(("_load_networking {!s} called".format(resource_id)))
 
     if not hasattr(self, '_name2id') or not isinstance(self._name2id, dict):
         self._name2id = dict()
 
     xurl = "/rest/networking/{!s}".format(resource_id)
     if self.debug & 0x02:
-        print("_load_networking : xurl = " + xurl)
+        print(("_load_networking : xurl = " + xurl))
     net_res_tree = self._getXMLetree(xurl)
     if net_res_tree is None:
         if ( len(self.error_str)):
@@ -43,8 +43,8 @@ def _load_networking(self, resource_id):
 
                 # name2id to replace name2var as a global lookup table
                 if n in self._name2id:
-                    print("Dup name2id : \"" + n + "\" : " + netrule['id'])
-                    print("\tname2id ", self._name2id[n])
+                    print(("Dup name2id : \"" + n + "\" : " + netrule['id']))
+                    print(("\tname2id ", self._name2id[n]))
                 else:
                     self._name2id[n] = (resource_id, netrule['id'])
 
@@ -87,7 +87,7 @@ def net_resource_run(self, rrid):
     xurl = "/rest/networking/resources/{!s}".format(rid)
 
     if self.debug & 0x02:
-        print("wol : xurl = " + xurl)
+        print(("wol : xurl = " + xurl))
     resp = self._getXMLetree(xurl)
     # self._printXML(resp)
     if resp is None or  resp.attrib["succeeded"] != 'true':
@@ -116,7 +116,7 @@ def net_resource_ids(self):
     if not self._net_resource:
         self.load_net_resource()
 
-    return self._net_resource.keys()
+    return list(self._net_resource.keys())
 
 
 def net_resource_names(self):
@@ -130,7 +130,7 @@ def net_resource_names(self):
     if not self._net_resource:
         self.load_net_resource()
 
-    return self.name2net_res.keys()
+    return list(self.name2net_res.keys())
 
 
 def net_resource_iter(self):
@@ -140,7 +140,7 @@ def net_resource_iter(self):
     """
     if not self._net_resource:
         self.load_net_resource()
-    for k, v in self._net_resource.items():
+    for k, v in list(self._net_resource.items()):
         yield v
 
 
@@ -175,7 +175,7 @@ def net_wol(self, wid):
     xurl = "/rest/networking/wol/" + wol_id
 
     if self.debug & 0x02:
-        print("wol : xurl = " + xurl)
+        print(("wol : xurl = " + xurl))
     resp = self._getXMLetree(xurl)
     # self._printXML(resp)
     if resp.attrib["succeeded"] != 'true':
@@ -207,7 +207,7 @@ def net_wol_names(self):
     """
     if not self._wolinfo:
         self.load_net_wol()
-    return self.name2wol.keys()
+    return list(self.name2wol.keys())
 
 def net_wol_ids(self):
     """ method to retrieve a list of WOL ids
@@ -218,7 +218,7 @@ def net_wol_ids(self):
     """
     if not self._wolinfo:
         self.load_net_wol()
-    return self._wolinfo.keys()
+    return list(self._wolinfo.keys())
 
 
 def net_wol_iter(self):
@@ -229,7 +229,7 @@ def net_wol_iter(self):
     if not self._wolinfo:
         self.load_net_wol()
 
-    for v in self._wolinfo.values():
+    for v in list(self._wolinfo.values()):
         yield v
 
 
@@ -239,7 +239,7 @@ def net_wol_iter(self):
 #
 if __name__ == "__main__":
     import __main__
-    print(__main__.__file__)
+    print((__main__.__file__))
 
     print("syntax ok")
     exit(0)
