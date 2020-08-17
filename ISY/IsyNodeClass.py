@@ -115,6 +115,19 @@ class _IsyNodeBase(IsySubClass):
         self._off("DFOF")
 
 
+    def dim(self):
+        """
+            decrease brightness of a device by ~3%
+        """
+        self.isy._node_send(self._mydict["address"], "cmd", "DIM")
+
+    def brighten(self):
+        """
+            increase brightness of a device by ~3%
+        """
+        self.isy._node_send(self._mydict["address"], "cmd", "BRT")
+
+
     def _off(self, cmd="DOF"):
         self.isy._node_send(self._mydict["address"], "cmd", cmd)
         if "property" in self._mydict:
@@ -309,7 +322,7 @@ class IsyNode(_IsyNodeBase):
 #            if "node-flag" in self._mydict:
 #                self.update()
 
-        self._hash = hashlib.sha256(self._mydict["address"])
+        self._hash = hashlib.sha256(self._mydict["address"].encode('utf-8'))
 
         if self.debug & 0x01:
             print(("Init Node : \"" + self._mydict["address"] + \
@@ -496,18 +509,6 @@ class IsyNode(_IsyNodeBase):
         return self.on(new_value)
     status = property(get_status, set_status)
 
-
-    def dim(self):
-        """
-            decrease brightness of a device by ~3%
-        """
-        self.isy._node_send(self._mydict["address"], "cmd", "DIM")
-
-    def brighten(self):
-        """
-            increase brightness of a device by ~3%
-        """
-        self.isy._node_send(self._mydict["address"], "cmd", "BRT")
 
     #
     # readonly to node attribute
