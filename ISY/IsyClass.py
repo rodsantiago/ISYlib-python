@@ -289,7 +289,7 @@ class Isy(IsyUtil):
         if self.faststart < 2:
             try:
                 self.load_conf()
-            except URL.URLError as e:
+            except URL.error.URLError as e:
                 print(("Unexpected error:", sys.exc_info()[0]))
                 print('Problem connecting with ISY device :', self.addr)
                 print(e)
@@ -1731,12 +1731,12 @@ class Isy(IsyUtil):
             xurl += "?reset=true"
         if self.debug & 0x02:
             print(("xurl = " + xurl))
-        req = URL.Request(xurl)
+        req = URL.request.Request(xurl)
         try:
 
             res = self._opener.open(req)
 
-        except URL.URLError as e:
+        except URL.error.URLError as e:
             # Error log can return a 404 is there are not logs ( yet )
             return [ ]
 

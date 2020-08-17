@@ -112,11 +112,11 @@ class IsyUtil(object):
         if ( noquote):
             xurl = self.baseurl + xmlpath
         else:
-            xurl = self.baseurl + URL.quote(xmlpath)
+            xurl = self.baseurl + URL.parse.quote(xmlpath)
         if self.debug & 0x02:
             print(("_getXMLetree: " + xurl))
         # print("_getXMLetree : URL.Request")
-        req = URL.Request(xurl)
+        req = URL.request.Request(xurl)
         # print("_getXMLetree : self._opener.open ")
         # HTTPError
         try:
@@ -124,7 +124,7 @@ class IsyUtil(object):
             data = res.read()
             # print("res.getcode() ", res.getcode(), len(data))
             res.close()
-        except URL.HTTPError as e:
+        except URL.error.HTTPError as e:
             self.error_str = str("Reponse Code : {0} : {1}" ).format(e.code, xurl)
             return None
 
