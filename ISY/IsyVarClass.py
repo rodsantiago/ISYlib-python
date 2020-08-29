@@ -5,10 +5,15 @@ __copyright__ = "Copyright (C) 2015 Peter Shipley"
 __license__ = "BSD"
 
 
+from enum import Enum
 from ISY.IsyExceptionClass import *
 from ISY.IsyUtilClass import IsySubClass
 
 __all__ = ['IsyVar']
+
+class IsyVarType(Enum):
+    INTEGER = 1
+    STATE = 2
 
 class IsyVar(IsySubClass):
     """ VAR Class for ISY
@@ -51,6 +56,11 @@ class IsyVar(IsySubClass):
 #       """
 #       return self._get_prop("type")
 #    type = property(get_var_type)
+
+    def is_state_var(self):
+        if int(self.type) == IsyVarType.STATE.value:
+            return True
+        return False
 
     def get_var_init(self):
         """ returns var init value
