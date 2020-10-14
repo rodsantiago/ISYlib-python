@@ -109,23 +109,28 @@ class IsyUtil(object):
 
     def _getXMLetree(self, xmlpath, noquote=0, timeout=10):
         """ take a URL path, download XLM and return parsed Etree """
-        if ( noquote):
-            xurl = self.baseurl + xmlpath
-        else:
-            xurl = self.baseurl + URL.parse.quote(xmlpath)
-        if self.debug & 0x02:
-            print(("_getXMLetree: " + xurl))
-        # print("_getXMLetree : URL.Request")
-        req = URL.request.Request(xurl)
-        # print("_getXMLetree : self._opener.open ")
-        # HTTPError
         try:
+            if ( noquote):
+                xurl = self.baseurl + xmlpath
+            else:
+                xurl = self.baseurl + URL.parse.quote(xmlpath)
+
+            if self.debug & 0x02:
+                print(("_getXMLetree: " + xurl))
+            # print("_getXMLetree : URL.Request")
+            req = URL.request.Request(xurl)
+            # print("_getXMLetree : self._opener.open ")
+            # HTTPError
+
             res = self._opener.open(req, None, timeout)
             data = res.read()
             # print("res.getcode() ", res.getcode(), len(data))
             res.close()
         except URL.error.HTTPError as e:
             self.error_str = str("Reponse Code : {0} : {1}" ).format(e.code, xurl)
+            return None
+        except Exception as e:
+            self.error_str = str(e)
             return None
 
         if len(self.error_str) : self.error_str = ""
