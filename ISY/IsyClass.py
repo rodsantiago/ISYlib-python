@@ -189,6 +189,8 @@ class Isy(IsyUtil):
 
     def __init__(self, **kwargs):
 
+        super().__init__()
+
         #
         # Keyword args
         #
